@@ -45,7 +45,7 @@ impl Record {
             // .bind_float(6, self.is_frank).unwrap()
             // .bind_float(7, self.likes_cats).unwrap();
 
-        session.execute_statement(INSERT_QUERY, 0).wait().unwrap();
+        session.execute(INSERT_QUERY, 0).wait().unwrap();
     }
 }
 
