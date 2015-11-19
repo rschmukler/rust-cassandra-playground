@@ -3,15 +3,18 @@ extern crate cassandra;
 use cassandra::*;
 use std::env;
 
+#[cfg_attr(rustfmt, rustfmt_skip)]
 static CREATE_KEYSPACE:&'static str = "
     CREATE KEYSPACE IF NOT EXISTS benchmark WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor': 2 }";
 
+#[cfg_attr(rustfmt, rustfmt_skip)]
 static CREATE_TABLE:&'static str = "
     CREATE TABLE IF NOT EXISTS benchmark.simple (
       id int PRIMARY KEY,
       count int
     )";
 
+#[cfg_attr(rustfmt, rustfmt_skip)]
 static INSERT_QUERY:&'static str = "INSERT INTO benchmark.simple \
      (id, count) VALUES (1, 1)";
 
@@ -33,17 +36,18 @@ impl Record {
         // let mut statement = prepared.bind();
 
         let mut statement = Statement::new(INSERT_QUERY, 2);
-        statement
-            .bind_int32(0, self.id).unwrap()
-            .bind_int32(0, self.count).unwrap();
-        
-            // .bind_string(1, self.field_one).unwrap()
-            // .bind_string(2, self.is_person).unwrap()
-            // .bind_int32(3, self.count as i32).unwrap()
-            // .bind_string(4, self.some_other_field).unwrap()
-            // .bind_int32(5, self.another as i32).unwrap()
-            // .bind_float(6, self.is_frank).unwrap()
-            // .bind_float(7, self.likes_cats).unwrap();
+        statement.bind_int32(0, self.id)
+                 .unwrap()
+                 .bind_int32(0, self.count)
+                 .unwrap();
+
+        // .bind_string(1, self.field_one).unwrap()
+        // .bind_string(2, self.is_person).unwrap()
+        // .bind_int32(3, self.count as i32).unwrap()
+        // .bind_string(4, self.some_other_field).unwrap()
+        // .bind_int32(5, self.another as i32).unwrap()
+        // .bind_float(6, self.is_frank).unwrap()
+        // .bind_float(7, self.likes_cats).unwrap();
 
         session.execute(INSERT_QUERY, 0).wait().unwrap();
     }
@@ -76,7 +80,12 @@ fn main() {
         let total_time_ms = (end_time - start_time) / 1000000 as f64;
         let rps = benchmark_count as f64 / total_time_ms * 1000 as f64;
 
-        println!("Inserted {} recs in {:.*}ms ({:.*} recs/s)", benchmark_count, 2, total_time_ms, 2, rps);
+        println!("Inserted {} recs in {:.*}ms ({:.*} recs/s)",
+                 benchmark_count,
+                 2,
+                 total_time_ms,
+                 2,
+                 rps);
     } else {
         println!("Please enter a number of records to insert...");
     }
@@ -86,10 +95,10 @@ fn make_sample(size: usize) -> Vec<Record> {
     let mut records: Vec<Record> = Vec::with_capacity(size);
 
     for i in 0..size {
-        records.push(Record{
+        records.push(Record {
             id: i as i32,
             field_one: "blah",
-            is_person: "hello-fuck",
+            is_person: "woops",
             count: 25,
             some_other_field: "hello-this-is a test of something else then",
             another: 100,
@@ -100,5 +109,3 @@ fn make_sample(size: usize) -> Vec<Record> {
 
     return records;
 }
-
-
